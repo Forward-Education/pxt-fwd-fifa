@@ -1,0 +1,32 @@
+{
+    "name": "fwd-fifa",
+    "version": "0.1.0",
+    "description": "Forward Education FIFA breakout board for micro:bit V2 — encoded DC motors, GPIO expander, NeoPixels, and Jacdac",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*",
+        "neopixel": "github:microsoft/pxt-neopixel#v0.7.5",
+        "jacdac": "github:jacdac/pxt-jacdac#v1.9.42",
+        "jacdac-servo": "github:jacdac/pxt-jacdac/servo#v1.9.42",
+        "jacdac-relay": "github:jacdac/pxt-jacdac/relay#v1.9.42",
+        "jacdac-dc-voltage-measurement": "github:jacdac/pxt-jacdac/dc-voltage-measurement#v1.9.42"
+    },
+    "files": [
+        "README.md",
+        "LICENSE",
+        "icon.png",
+        "drawers.ts",
+        "motors.ts",
+        "encoders.ts",
+        "expander.ts",
+        "lights.ts",
+        "brain.ts"
+    ],
+    "testFiles": [
+        "test.ts"
+    ],
+    "supportedTargets": [
+        "microbit"
+    ],
+    "preferredEditor": "blocksprj"
+}
