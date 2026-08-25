@@ -33,6 +33,103 @@ Built ahead of first boards. Known gaps, in priority order:
 5. Localization (`_locales/{de,es,fr}`) not yet generated.
 6. `icon.png` is a placeholder — replace with the brand asset before launch.
 
+## Blocks API
+
+### Motors (`fwdMotors`)
+
+```sig
+fwdMotors.setSpeed(FwdFifaMotor.M1, 50)
+```
+Run a motor at a speed from `-100` to `100` %. Positive is forward.
+
+```sig
+fwdMotors.stop(FwdFifaMotor.M1, FwdFifaStopMode.Brake)
+```
+Stop a motor, braking (short the windings) or coasting (freewheel).
+
+```sig
+fwdMotors.tank(50, 50)
+```
+Run both motors at once (tank drive): left = motor 1, right = motor 2.
+
+```sig
+fwdMotors.stopAll()
+```
+Stop both motors (brake).
+
+```sig
+fwdMotors.servoPort1.setAngle(135)
+```
+Move a servo edge port (1–3) to an angle, 0–270 degrees.
+
+```sig
+fwdMotors.setRelay(true)
+```
+Switch the relay port on or off.
+
+```sig
+fwdMotors.batteryVoltage()
+```
+The battery voltage in volts, measured by the onboard brain.
+
+```sig
+fwdMotors.batteryLevel()
+```
+The battery charge level as a percentage (LiPo: 3.3 V = 0 %, 4.2 V = 100 %).
+
+### Sensors (`fwdSensors`)
+
+```sig
+fwdSensors.encoderCount(FwdFifaEncoder.M1)
+```
+The encoder count for a motor since reset. Forward counts up.
+
+```sig
+fwdSensors.speedRPM(FwdFifaEncoder.M1)
+```
+The motor speed in revolutions per minute of the output shaft. Requires
+counts-per-revolution to be set first.
+
+```sig
+fwdSensors.resetEncoder(FwdFifaEncoder.M1)
+```
+Reset a motor's encoder count to zero.
+
+```sig
+fwdSensors.setCountsPerRevolution(576)
+```
+Set how many encoder counts equal one full turn of the output shaft.
+
+```sig
+fwdSensors.expanderWrite(FwdFifaExpanderPin.P1, 1)
+```
+Set an expander pin on the 5-pin header high or low (makes it an output).
+
+```sig
+fwdSensors.expanderRead(FwdFifaExpanderPin.P1)
+```
+Read an expander pin (makes it an input).
+
+```sig
+fwdSensors.expanderPullUp(FwdFifaExpanderPin.P1, true)
+```
+Turn the internal pull-up on or off for an expander pin.
+
+```sig
+fwdSensors.expanderConnected()
+```
+Whether the expander answers on the I2C bus.
+
+### Lights (`fwdLights`)
+
+```sig
+fwdLights.createStrip(8)
+```
+Create a NeoPixel strip plugged into the 3-pin header (P2). Brightness starts
+capped at 25 % to stay inside the header's 0.5 A power budget; raise it with
+the strip's set-brightness block for short strips. Returns a standard
+`neopixel.Strip`, so all `neopixel` blocks work on it.
+
 ## Conventions
 
 Follows `pxt-fwd-base` / `pxt-fwd-modules` style: shared drawers (`fwdMotors`
