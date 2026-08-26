@@ -1,6 +1,6 @@
 {
     "name": "fwd-fifa",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Forward Education FIFA breakout board for micro:bit V2 — encoded DC motors, GPIO expander, NeoPixels, and Jacdac",
     "license": "MIT",
     "dependencies": {
