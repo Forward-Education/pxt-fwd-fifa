@@ -46,8 +46,9 @@ namespace fwdSensors {
     /**
      * Whether the expander answers on the I2C bus.
      */
-    //% group="Expander"
-    //% block="expander is connected"
+    //% group="5-pin GPIO Header"
+    //% block="5-pin header is connected"
+    //% advanced=true
     //% blockId=fwd_fifa_expander_connected
     //% weight=79
     export function expanderConnected(): boolean {
@@ -62,8 +63,9 @@ namespace fwdSensors {
      * @param pin which expander pin on the 5-pin header
      * @param value 1 for high, 0 for low
      */
-    //% group="Expander"
-    //% block="write $value to expander $pin"
+    //% group="5-pin GPIO Header"
+    //% block="write $value to header $pin"
+    //% advanced=true
     //% blockId=fwd_fifa_expander_write
     //% value.min=0 value.max=1 value.defl=1
     //% weight=99
@@ -80,8 +82,9 @@ namespace fwdSensors {
      * Read an expander pin (makes it an input).
      * @param pin which expander pin on the 5-pin header
      */
-    //% group="Expander"
-    //% block="read expander $pin"
+    //% group="5-pin GPIO Header"
+    //% block="read header $pin"
+    //% advanced=true
     //% blockId=fwd_fifa_expander_read
     //% weight=98
     export function expanderRead(pin: FwdFifaExpanderPin): number {
@@ -96,8 +99,9 @@ namespace fwdSensors {
      * @param pin which expander pin on the 5-pin header
      * @param on true to enable the pull-up
      */
-    //% group="Expander"
-    //% block="set expander $pin pull-up $on"
+    //% group="5-pin GPIO Header"
+    //% block="set header $pin pull-up $on"
+    //% advanced=true
     //% blockId=fwd_fifa_expander_pullup
     //% on.shadow="toggleOnOff" on.defl=true
     //% weight=97
@@ -115,7 +119,7 @@ namespace fwdSensors {
      * @param reg register address (BANK=0 map)
      * @param value byte to write
      */
-    //% group="Expander"
+    //% group="5-pin GPIO Header"
     //% block="expander register $reg write $value"
     //% blockId=fwd_fifa_expander_reg_write
     //% weight=59
@@ -128,7 +132,7 @@ namespace fwdSensors {
      * Read a raw expander register (advanced).
      * @param reg register address (BANK=0 map)
      */
-    //% group="Expander"
+    //% group="5-pin GPIO Header"
     //% block="expander register $reg read"
     //% blockId=fwd_fifa_expander_reg_read
     //% weight=58

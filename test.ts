@@ -2,16 +2,21 @@
 // block into a program and copy the JavaScript).
 //
 // Covered signatures:
-//   fwdMotors.setSpeed / stop / tank / stopAll
-//   fwdMotors.servoPort1.setAngle / setRelay
+//   fwdMotors.setSpeed / stop / tank / stopAll / servoPort1.setAngle / setRelay
 //   fwdSensors.encoderCount / speedRPM / resetEncoder / setCountsPerRevolution
+//   fwdSensors.batteryVoltage / batteryLevel
 //   fwdSensors.expanderWrite / expanderRead / expanderPullUp / expanderConnected
-//   fwdLights.createStrip
+//   fwdLights.initStrip / setAllPixels / setPixel / setBrightness / clearPixels
+//   fwdLights.rotatePixels / rgb
 
 fwdSensors.setCountsPerRevolution(576)
 
-let strip = fwdLights.createStrip(8)
-strip.showColor(neopixel.colors(NeoPixelColors.Green))
+fwdLights.initStrip(8)
+fwdLights.setBrightness(64)
+fwdLights.setAllPixels(0x00ff00)
+fwdLights.setPixel(0, fwdLights.rgb(255, 0, 0))
+fwdLights.rotatePixels(1)
+fwdLights.clearPixels()
 
 fwdMotors.setSpeed(FwdFifaMotor.M1, 50)
 fwdMotors.setSpeed(FwdFifaMotor.M2, -50)
@@ -30,11 +35,12 @@ basic.forever(() => {
     serial.writeValue("rpm2", fwdSensors.speedRPM(FwdFifaEncoder.M2))
     serial.writeValue("gpa0", fwdSensors.expanderRead(FwdFifaExpanderPin.P1))
     serial.writeValue("i2c", fwdSensors.expanderConnected() ? 1 : 0)
+    serial.writeValue("vbat", fwdSensors.batteryVoltage())
     basic.pause(500)
 })
 
 input.onButtonPressed(Button.A, () => {
     fwdSensors.resetEncoder(FwdFifaEncoder.M1)
     fwdSensors.resetEncoder(FwdFifaEncoder.M2)
+    basic.showNumber(fwdSensors.batteryLevel())
 })
-basic.showNumber(fwdMotors.batteryLevel())

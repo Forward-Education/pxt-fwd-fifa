@@ -48,33 +48,6 @@ namespace fwdMotors {
 
     const _relay = new modules.RelayClient("fifaBrain/relay")
 
-    const _battery = new modules.DcVoltageMeasurementClient("fifaBrain/battery")
-
-    /**
-     * The battery voltage in volts, measured by the onboard brain.
-     */
-    //% group="Battery"
-    //% block="battery voltage (V)"
-    //% blockId=fwd_fifa_battery_voltage
-    //% weight=69
-    export function batteryVoltage(): number {
-        return _battery.measurement()
-    }
-
-    /**
-     * The battery charge level as a rough percentage (LiPo: 3.3 V = 0%,
-     * 4.2 V = 100%).
-     */
-    //% group="Battery"
-    //% block="battery level (\\%)"
-    //% blockId=fwd_fifa_battery_level
-    //% weight=68
-    export function batteryLevel(): number {
-        const v = _battery.measurement()
-        if (isNaN(v) || v <= 0) return 0
-        return Math.constrain(Math.round(((v - 3.3) / 0.9) * 100), 0, 100)
-    }
-
     /**
      * Switch the relay port on or off.
      * @param on true to energize the relay output
@@ -86,5 +59,34 @@ namespace fwdMotors {
     //% weight=79
     export function setRelay(on: boolean): void {
         _relay.setActive(on)
+    }
+}
+
+namespace fwdSensors {
+    const _battery = new modules.DcVoltageMeasurementClient("fifaBrain/battery")
+
+    /**
+     * The battery voltage in volts, measured by the onboard brain.
+     */
+    //% group="Battery"
+    //% block="battery voltage (V)"
+    //% blockId=fwd_fifa_battery_voltage
+    //% weight=79
+    export function batteryVoltage(): number {
+        return _battery.measurement()
+    }
+
+    /**
+     * The battery charge level as a rough percentage (LiPo: 3.3 V = 0%,
+     * 4.2 V = 100%).
+     */
+    //% group="Battery"
+    //% block="battery level (\\%)"
+    //% blockId=fwd_fifa_battery_level
+    //% weight=78
+    export function batteryLevel(): number {
+        const v = _battery.measurement()
+        if (isNaN(v) || v <= 0) return 0
+        return Math.constrain(Math.round(((v - 3.3) / 0.9) * 100), 0, 100)
     }
 }

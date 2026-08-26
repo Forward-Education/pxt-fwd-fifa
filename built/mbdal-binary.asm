@@ -1,7 +1,7 @@
-; Interface tables: 786/1416 (56%)
-; Virtual methods: 12 / 167
+; Interface tables: 773/1428 (54%)
+; Virtual methods: 12 / 161
 ; generated code sizes (bytes): 0 (incl. 0 user, 0 helpers, 0 vtables, 0 lits); src size 98
-; assembly: 5 lines; density: 0 bytes/stmt; (2383 stmts)
+; assembly: 5 lines; density: 0 bytes/stmt; (2396 stmts)
 ; total bytes: 216162 (92.2% of 229.0k flash with 18334 free)
 ; peep hole pass: 0 instructions removed and 0 updated
 

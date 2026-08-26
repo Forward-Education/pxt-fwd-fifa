@@ -24,10 +24,9 @@ Built ahead of first boards. Known gaps, in priority order:
    encoder CPR from the production motor.
 2. **No closed loop yet** — PI speed control / drive-straight / move-cm blocks
    land after encoder CPR + wheel geometry are known.
-3. **NeoPixel surface is a thin factory** over `microsoft/pxt-neopixel` pinned
-   to P2 with brightness capped at 25% (header supply is current-limited to
-   0.5 A ≈ 8 px full white). The richer fwd-neopixel matrix/animation surface
-   can be lifted later.
+3. **NeoPixel surface is strip-level** (self-contained on `ws2812b`, all blocks
+   under Lights, brightness capped at 25% for the 0.5 A header limit). The
+   richer fwd-neopixel matrix/animation surface can be lifted later.
 4. **Brain binding uses role grouping** (`fifaBrain/*?srvo=N`), not product-ID
    binding (which doesn't exist in pxt-jacdac role queries).
 5. Localization (`_locales/{de,es,fr}`) not yet generated.
@@ -67,17 +66,17 @@ fwdMotors.setRelay(true)
 ```
 Switch the relay port on or off.
 
+### Sensors (`fwdSensors`)
+
 ```sig
-fwdMotors.batteryVoltage()
+fwdSensors.batteryVoltage()
 ```
 The battery voltage in volts, measured by the onboard brain.
 
 ```sig
-fwdMotors.batteryLevel()
+fwdSensors.batteryLevel()
 ```
 The battery charge level as a percentage (LiPo: 3.3 V = 0 %, 4.2 V = 100 %).
-
-### Sensors (`fwdSensors`)
 
 ```sig
 fwdSensors.encoderCount(FwdFifaEncoder.M1)
@@ -103,7 +102,7 @@ Set how many encoder counts equal one full turn of the output shaft.
 ```sig
 fwdSensors.expanderWrite(FwdFifaExpanderPin.P1, 1)
 ```
-Set an expander pin on the 5-pin header high or low (makes it an output).
+Set a 5-pin-header GPIO high or low (under Sensors → more; makes it an output).
 
 ```sig
 fwdSensors.expanderRead(FwdFifaExpanderPin.P1)
@@ -122,13 +121,44 @@ Whether the expander answers on the I2C bus.
 
 ### Lights (`fwdLights`)
 
+All NeoPixel blocks live under the **Lights** drawer (self-contained driver on
+P2 — no separate Neopixel category).
+
 ```sig
-fwdLights.createStrip(8)
+fwdLights.initStrip(8)
 ```
-Create a NeoPixel strip plugged into the 3-pin header (P2). Brightness starts
-capped at 25 % to stay inside the header's 0.5 A power budget; raise it with
-the strip's set-brightness block for short strips. Returns a standard
-`neopixel.Strip`, so all `neopixel` blocks work on it.
+Set up the strip plugged into the 3-pin header. Brightness starts capped at
+25 % to stay inside the header's 0.5 A power budget.
+
+```sig
+fwdLights.setAllPixels(0x00ff00)
+```
+Set every pixel to a color (color picker).
+
+```sig
+fwdLights.setPixel(0, 0xff0000)
+```
+Set one pixel to a color (pixel 0 is closest to the board).
+
+```sig
+fwdLights.setBrightness(64)
+```
+Set the strip brightness, 0–255.
+
+```sig
+fwdLights.clearPixels()
+```
+Turn all pixels off.
+
+```sig
+fwdLights.rotatePixels(1)
+```
+Move every pixel's color along the strip, wrapping around.
+
+```sig
+fwdLights.rgb(255, 128, 0)
+```
+Make a color from red/green/blue parts (under Lights → more).
 
 ## Conventions
 
