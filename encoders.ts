@@ -30,7 +30,12 @@ namespace fwdSensors {
     // speed measurement state
     const _lastCount: { [key: number]: number } = { 1: 0, 2: 0 }
     const _lastRpm: { [key: number]: number } = { 1: 0, 2: 0 }
-    let _cpr = 0 // counts per output-shaft revolution at 1× decoding; 0 = unset
+    // Counts per output-shaft revolution at 1x decoding (rising edges of A).
+    // Default measured on the FIFA sample motor 2026-09-03: 14 pulses per
+    // motor rev x 1:120 gearbox = 1680 (hand-turn measured 1676). A 1:48
+    // variant of the same motor would be 672; override with
+    // setCountsPerRevolution() if the kit ships a different ratio.
+    let _cpr = 1680
 
     function ensureInit(): void {
         if (_initialized) return
