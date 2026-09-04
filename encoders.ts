@@ -2,7 +2,7 @@
  * FIFA breakout — quadrature encoder counting (MVP, TypeScript).
  *
  * Wiring (REV A): Motor 1 encoder A/B = P8/P9, Motor 2 encoder A/B = P0/P1.
- * Encoders are hall quadrature on the motor shaft (before the 1:48 gearbox),
+ * Encoders are hall quadrature on the motor shaft (before the 1:120 gearbox),
  * pulled up to 3V3B on the board.
  *
  * MVP strategy: count rising edges on channel A only (1× decoding); sign the
@@ -67,13 +67,14 @@ namespace fwdSensors {
 
     /**
      * Set how many encoder counts equal one full turn of the wheel/output
-     * shaft. Measure this once for your motor and call it at program start.
+     * shaft. The default (1680) is correct for the motors in the kit — only
+     * change this if you have fitted motors with a different gearbox.
      * @param counts encoder counts per output-shaft revolution
      */
     //% group="Encoders"
     //% block="set encoder counts per revolution to $counts"
     //% blockId=fwd_fifa_encoder_set_cpr
-    //% counts.defl=576
+    //% counts.defl=1680
     //% weight=89
     export function setCountsPerRevolution(counts: number): void {
         _cpr = counts

@@ -6,10 +6,11 @@
 //   fwdSensors.encoderCount / speedRPM / resetEncoder / setCountsPerRevolution
 //   fwdSensors.batteryVoltage / batteryLevel
 //   fwdSensors.expanderWrite / expanderRead / expanderPullUp / expanderConnected
+//   fwdSensors.expanderRegWrite / expanderRegRead
 //   fwdLights.initStrip / setAllPixels / setPixel / setBrightness / clearPixels
 //   fwdLights.rotatePixels / rgb
 
-fwdSensors.setCountsPerRevolution(576)
+fwdSensors.setCountsPerRevolution(1680)
 
 fwdLights.initStrip(8)
 fwdLights.setBrightness(64)
@@ -29,6 +30,12 @@ fwdMotors.setRelay(true)
 
 fwdSensors.expanderPullUp(FwdFifaExpanderPin.P1, true)
 fwdSensors.expanderWrite(FwdFifaExpanderPin.P2, 1)
+
+// Advanced raw register access (MCP23017, IOCON.BANK = 0):
+// make all of port B an output, drive it high, then read the port back.
+fwdSensors.expanderRegWrite(0x01, 0x00) // IODIRB = all outputs
+fwdSensors.expanderRegWrite(0x15, 0xff) // OLATB  = all high
+serial.writeValue("gpiob", fwdSensors.expanderRegRead(0x13)) // GPIOB
 
 basic.forever(() => {
     serial.writeValue("enc1", fwdSensors.encoderCount(FwdFifaEncoder.M1))

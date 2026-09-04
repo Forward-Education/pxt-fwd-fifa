@@ -3,3 +3,14 @@ pxt_modules/
 node_modules/
 mkc.json
 .DS_Store
+
+# Internal working files — kept out of the public repo.
+# Not for external distribution (micro:bit Foundation review, FIFA, students).
+CLAUDE.md
+AGENTS.md
+HANDOFF.md
+.claude/
+.cursor/
+NOTES.md
+TODO.md
+*.internal.md
