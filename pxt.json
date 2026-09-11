@@ -16,6 +16,7 @@
         "LICENSE",
         "drawers.ts",
         "motors.ts",
+        "drive.ts",
         "encoders.ts",
         "expander.ts",
         "lights.ts",

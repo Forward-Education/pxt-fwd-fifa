@@ -42,16 +42,15 @@ The **Motors**, **Lights** and **Sensors** categories appear in the toolbox.
 
 ## Example
 
-Button **A** drives forward and counts wheel turns; button **B** stops. The
-NeoPixel strip shows green while the battery is healthy and red when it's low.
+Button **A** drives the robot in a 30 cm square. The NeoPixel strip shows
+green while the battery is healthy and red when it's low.
 
 ```blocks
 input.onButtonPressed(Button.A, function () {
-    fwdSensors.resetEncoder(FwdFifaEncoder.M1)
-    fwdMotors.tank(60, 60)
-})
-input.onButtonPressed(Button.B, function () {
-    fwdMotors.stopAll()
+    for (let i = 0; i < 4; i++) {
+        fwdMotors.driveFor(FwdFifaDirection.Forward, 30, FwdFifaMoveUnit.Cm)
+        fwdMotors.turnFor(FwdFifaTurn.Right, 90)
+    }
 })
 fwdLights.initStrip(8)
 basic.forever(function () {
@@ -65,6 +64,51 @@ basic.forever(function () {
 ```
 
 ## Blocks
+
+### Driving
+
+These blocks use the encoders to travel a measured distance, so the robot goes
+the same distance whether the battery is full or nearly flat.
+
+```sig
+fwdMotors.driveFor(FwdFifaDirection.Forward, 20, FwdFifaMoveUnit.Cm)
+```
+Drive both motors a set distance, then stop — in centimetres, wheel rotations
+or seconds. The program waits until the robot has finished moving.
+
+```sig
+fwdMotors.turnFor(FwdFifaTurn.Right, 90)
+```
+Turn the robot on the spot by a number of degrees, then stop.
+
+```sig
+fwdMotors.startDriving(FwdFifaDirection.Forward)
+```
+Start driving and keep going until told to stop.
+
+```sig
+fwdMotors.stopDriving()
+```
+Stop both motors.
+
+```sig
+fwdMotors.setDriveSpeed(40)
+```
+Set the speed the driving blocks use, 1–40 %.
+
+```sig
+fwdMotors.setDistancePerRotation(21.36)
+```
+How far the robot travels for one full turn of its wheels. The default matches
+the wheels in the kit. To measure your own: mark a wheel, roll the robot
+forward exactly one wheel turn, and measure how far it moved.
+
+> **Why 40 %?** The driving blocks are limited to 40 % speed (about 11 cm/s) so
+> that encoder counting stays reliable. The `set motor` and `drive left/right`
+> blocks below are not limited, but they don't measure distance.
+
+> Turning on the spot slips more than driving straight, so expect a few degrees
+> of error on a turn. Driving straight is accurate to a few millimetres.
 
 ### Motors
 

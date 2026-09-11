@@ -82,6 +82,14 @@ namespace fwdSensors {
     }
 
     /**
+     * Counts per output-shaft revolution (internal — no block; the drive
+     * blocks in drive.ts need it to convert distance into counts).
+     */
+    export function _countsPerRevolution(): number {
+        return _cpr
+    }
+
+    /**
      * The encoder count for a motor since reset. Forward counts up, reverse
      * counts down.
      * @param encoder which motor's encoder

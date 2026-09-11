@@ -3,6 +3,8 @@
 //
 // Covered signatures:
 //   fwdMotors.setSpeed / stop / tank / stopAll / servoPort1.setAngle / setRelay
+//   fwdMotors.driveFor / turnFor / startDriving / stopDriving
+//   fwdMotors.setDriveSpeed / setDistancePerRotation
 //   fwdSensors.encoderCount / speedRPM / resetEncoder / setCountsPerRevolution
 //   fwdSensors.batteryVoltage / batteryLevel
 //   fwdSensors.expanderWrite / expanderRead / expanderPullUp / expanderConnected
@@ -24,6 +26,15 @@ fwdMotors.setSpeed(FwdFifaMotor.M2, -50)
 fwdMotors.tank(30, 30)
 fwdMotors.stop(FwdFifaMotor.M1, FwdFifaStopMode.Coast)
 fwdMotors.stopAll()
+
+fwdMotors.setDistancePerRotation(21.36)
+fwdMotors.setDriveSpeed(40)
+fwdMotors.driveFor(FwdFifaDirection.Forward, 20, FwdFifaMoveUnit.Cm)
+fwdMotors.driveFor(FwdFifaDirection.Backward, 2, FwdFifaMoveUnit.Rotations)
+fwdMotors.driveFor(FwdFifaDirection.Forward, 1, FwdFifaMoveUnit.Seconds)
+fwdMotors.turnFor(FwdFifaTurn.Right, 90)
+fwdMotors.startDriving(FwdFifaDirection.Forward)
+fwdMotors.stopDriving()
 
 fwdMotors.servoPort1.setAngle(135)
 fwdMotors.setRelay(true)

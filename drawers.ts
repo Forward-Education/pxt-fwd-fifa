@@ -3,6 +3,7 @@
 // Do NOT change colors/icons here without changing fwd-base to match.
 
 //% block="Motors"
+//% groups='["Driving", "DC Motors", "Servo Ports", "Relay Port"]'
 //% color=#239DD1
 //% icon=""
 //% weight=201

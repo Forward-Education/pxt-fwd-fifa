@@ -66,6 +66,22 @@ namespace fwdSensors {
     const _battery = new modules.DcVoltageMeasurementClient("fifaBrain/battery")
 
     /**
+     * Whether the onboard Jacdac brain has bound its battery role (internal —
+     * no block). Lets a diagnostic tell "brain not bound" apart from "brain
+     * bound but reading 0 V", which look identical from the voltage alone.
+     */
+    export function _brainConnected(): boolean {
+        return _battery.isConnected()
+    }
+
+    /**
+     * The raw battery measurement, unfiltered (internal — no block).
+     */
+    export function _batteryRaw(): number {
+        return _battery.measurement()
+    }
+
+    /**
      * The battery voltage in volts, measured by the onboard brain.
      */
     //% group="Battery"
