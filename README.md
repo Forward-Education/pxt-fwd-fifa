@@ -24,7 +24,8 @@ The FIFA board works with **micro:bit V2 only**.
 | Port | What you plug in | Blocks |
 |---|---|---|
 | 2 × motor ports | TT gearmotors with encoders | Motors, Sensors |
-| 3 × servo ports | 270° servos | Motors |
+| 3 × servo ports | 180°, 270° or continuous-rotation servos (4.8–6 V) | Motors |
+| 3-pin header | a Dupont/JR servo (3.3–6 V rated — the header supplies 3.3 V) or a NeoPixel strip | Motors / Lights |
 | 1 × relay port | A device to switch on and off | Motors |
 | 4 × Jacdac ports | Any Jacdac module | that module's extension |
 | 3-pin header | A NeoPixel strip | Lights |
@@ -135,9 +136,46 @@ Stop both motors (brake).
 ### Servos and relay
 
 ```sig
-fwdMotors.servoPort1.setAngle(135)
+fwdMotors.servoPort1.setType(FwdFifaServoType.Positional180)
 ```
-Move a servo port (1–3) to an angle, 0–270 degrees.
+Tell the board what kind of servo is on a servo port: a **180° servo** (most 9 g
+servos), a **270° servo**, or a **continuous rotation servo**. The port starts as
+270°. Set the type once at the start of the program.
+
+```sig
+fwdMotors.servoPort1.setAngle(90)
+```
+Move a servo port (1–3) to an angle. 0–180 for a 180° servo, 0–270 for a 270° one.
+
+```sig
+fwdMotors.servoPort1.runAt(50)
+```
+Run a continuous-rotation servo at a speed, −100 % to 100 %. 0 stops it.
+
+```sig
+fwdMotors.servoPort1.release()
+```
+Stop driving the servo. A positional servo stops holding its angle (and stops
+drawing current); a continuous servo stops turning.
+
+#### Servo on the 3-pin header
+
+The 3-pin header takes a servo plug directly (signal on P2). The header supplies
+**3.3 V**, so use a servo rated for 3.3–6 V. One servo only.
+
+```sig
+fwdMotors.setHeaderServoType(FwdFifaServoType.Positional180)
+```
+```sig
+fwdMotors.setHeaderServoAngle(90)
+```
+```sig
+fwdMotors.runHeaderServo(50)
+```
+```sig
+fwdMotors.releaseHeaderServo()
+```
+Same four operations for the header servo.
 
 ```sig
 fwdMotors.setRelay(true)

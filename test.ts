@@ -2,7 +2,9 @@
 // block into a program and copy the JavaScript).
 //
 // Covered signatures:
-//   fwdMotors.setSpeed / stop / tank / stopAll / servoPort1.setAngle / setRelay
+//   fwdMotors.setSpeed / stop / tank / stopAll / setRelay
+//   fwdMotors.servoPort1.setType / setAngle / runAt / release
+//   fwdMotors.setHeaderServoType / setHeaderServoAngle / runHeaderServo / releaseHeaderServo
 //   fwdMotors.driveFor / turnFor / startDriving / stopDriving
 //   fwdMotors.setDriveSpeed / setDistancePerRotation
 //   fwdSensors.encoderCount / speedRPM / resetEncoder / setCountsPerRevolution
@@ -36,7 +38,18 @@ fwdMotors.turnFor(FwdFifaTurn.Right, 90)
 fwdMotors.startDriving(FwdFifaDirection.Forward)
 fwdMotors.stopDriving()
 
-fwdMotors.servoPort1.setAngle(135)
+fwdMotors.servoPort1.setType(FwdFifaServoType.Positional180)
+fwdMotors.servoPort1.setAngle(90)
+fwdMotors.servoPort2.setType(FwdFifaServoType.Continuous)
+fwdMotors.servoPort2.runAt(50)
+fwdMotors.servoPort2.release()
+fwdMotors.servoPort3.setAngle(135)
+fwdMotors.servoPort1.release()
+
+fwdMotors.setHeaderServoType(FwdFifaServoType.Positional180)
+fwdMotors.setHeaderServoAngle(90)
+fwdMotors.runHeaderServo(-30)
+fwdMotors.releaseHeaderServo()
 fwdMotors.setRelay(true)
 
 fwdSensors.expanderPullUp(FwdFifaExpanderPin.P1, true)

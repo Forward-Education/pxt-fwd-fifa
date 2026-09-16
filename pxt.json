@@ -1,6 +1,6 @@
 {
     "name": "fwd-fifa",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Forward Education FIFA breakout board for micro:bit V2 \u2014 encoded DC motors, GPIO expander, NeoPixels, and Jacdac",
     "license": "MIT",
     "dependencies": {
@@ -20,7 +20,8 @@
         "encoders.ts",
         "expander.ts",
         "lights.ts",
-        "brain.ts"
+        "brain.ts",
+        "servos.ts"
     ],
     "testFiles": [
         "test.ts"
