@@ -2,10 +2,11 @@
  * FIFA breakout — Jacdac clients for the onboard STM32 brain.
  *
  * The brain hosts three servo services (edge ports SERVO 1-3) and a relay
- * service. The servo services boot with a 270° / 600-2500 µs mapping; the
- * client re-programs min/max pulse and angle registers (they are writable —
- * `.fixed = 0` in the firmware profile) when a different servo type is
- * selected, so 180°, 270° and continuous-rotation servos all work. Roles share the "fifaBrain/" prefix so the role manager
+ * service. The servo services boot with a 270° / 600-2500 µs mapping. The
+ * client re-programs the min/max pulse registers (writable, `.fixed = 0` in the
+ * firmware profile) for the selected servo type and rescales angles/speeds onto
+ * the brain's fixed 0-270° register range, so 180°, 270° and continuous-rotation
+ * servos all work without a firmware change. Roles share the "fifaBrain/" prefix so the role manager
  * groups them onto one physical device, and ?srvo=N pins each role to the
  * Nth servo service on that device (same pattern as fwd-servo-base).
  *
@@ -42,7 +43,9 @@ namespace fwdMotors {
             this.applyType()
         }
 
-        // Push the pulse/angle mapping for the selected type to the brain.
+        // Push the pulse range for the selected type to the brain. The brain's
+        // angle range (0-270°) is a read-only register per the Jacdac spec, so
+        // requested angles/speeds are rescaled onto 0-270 in brainAngle().
         // Register writes made before the role binds are lost, so this is
         // re-tried on every command until it goes out while connected.
         private applyType(): void {
@@ -50,9 +53,14 @@ namespace fwdMotors {
             const r = _servoRange(this._type)
             this.setMinPulse(r[0])
             this.setMaxPulse(r[1])
-            this.setReg(jacdac.ServoReg.MinAngle, "i16.16", [r[2]])
-            this.setReg(jacdac.ServoReg.MaxAngle, "i16.16", [r[3]])
             if (this.isConnected()) this._typeSent = true
+        }
+
+        // Map a value in the type's own range onto the brain's fixed 0-270° scale,
+        // so the brain emits minPulse..maxPulse across the type's travel.
+        private brainAngle(value: number): number {
+            const r = _servoRange(this._type)
+            return Math.map(Math.constrain(value, r[2], r[3]), r[2], r[3], 0, 270)
         }
 
         /**
@@ -67,12 +75,11 @@ namespace fwdMotors {
         setAngle(angle: number): void {
             this.applyType()
             if (this._type == FwdFifaServoType.Continuous) {
-                super.setAngle(0) // 1500 µs = stop
+                super.setAngle(135) // mid-scale = 1500 µs = stop
                 return
             }
-            const r = _servoRange(this._type)
             this.setEnabled(true)
-            super.setAngle(Math.constrain(angle, r[2], r[3]))
+            super.setAngle(this.brainAngle(angle))
         }
 
         /**
@@ -91,9 +98,8 @@ namespace fwdMotors {
             // brain (continuous: -100..100 ↔ 1000..2000 µs). Done locally rather
             // than via the base run(), which reads min/max angle back from the
             // device and could see stale values right after the type change.
-            const r = _servoRange(this._type)
-            const sp = Math.constrain(Math.round(speed), -100, 100)
-            super.setAngle(Math.map(sp, -100, 100, r[2], r[3]))
+            // continuous type: -100..100 % ↔ 0..270 on the brain ↔ 1000..2000 µs
+            super.setAngle(this.brainAngle(Math.round(speed)))
         }
 
         /**
@@ -105,7 +111,7 @@ namespace fwdMotors {
         //% blockId=fwd_fifa_servo_release
         //% weight=87
         release(): void {
-            if (this._type == FwdFifaServoType.Continuous) super.setAngle(0)
+            if (this._type == FwdFifaServoType.Continuous) super.setAngle(135)
             this.setEnabled(false)
         }
     }
