@@ -307,12 +307,15 @@ Read a header pin (makes it an input).
 ```sig
 fwdSensors.expanderPullUp(FwdFifaExpanderPin.P1, true)
 ```
-Turn the internal pull-up on or off for a header pin.
+Turn the internal pull-up on or off for a header pin. Current boards have
+pull-ups built in that are always on, so an unconnected pin reads 1 and this
+block has no effect; it is only needed on early boards.
 
 ```sig
 fwdSensors.expanderConnected()
 ```
-Whether the header's expander chip answers on the I2C bus.
+Whether the header's expander chip answers on the I2C bus. It runs from the
+battery, so it only answers while the board is switched on.
 
 ## Use as Extension
 

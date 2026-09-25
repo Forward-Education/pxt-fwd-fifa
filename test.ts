@@ -57,8 +57,11 @@ fwdMotors.setRelay(true)
 fwdSensors.expanderPullUp(FwdFifaExpanderPin.P1, true)
 fwdSensors.expanderWrite(FwdFifaExpanderPin.P2, 1)
 
-// Advanced raw register access (MCP23017, IOCON.BANK = 0):
-// make all of port B an output, drive it high, then read the port back.
+// Advanced raw register access. Register numbers are the MCP23017's
+// (REV_A-C, IOCON.BANK = 0): make port B an output, drive it high, read it
+// back. REV_D+ boards have an XL9555 with its own map, where 0x01 is a
+// read-only input register and the others are undefined - this is here for
+// compile coverage.
 fwdSensors.expanderRegWrite(0x01, 0x00) // IODIRB = all outputs
 fwdSensors.expanderRegWrite(0x15, 0xff) // OLATB  = all high
 serial.writeValue("gpiob", fwdSensors.expanderRegRead(0x13)) // GPIOB
