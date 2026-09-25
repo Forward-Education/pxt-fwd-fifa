@@ -1,7 +1,8 @@
 /**
  * FIFA breakout — quadrature encoder counting (MVP, TypeScript).
  *
- * Wiring (REV A): Motor 1 encoder A/B = P8/P9, Motor 2 encoder A/B = P0/P1.
+ * Wiring (all revisions): Motor 1 (J5, right wheel) encoder A/B = P8/P9,
+ * Motor 2 (J6, left wheel) encoder A/B = P0/P1.
  * Encoders are hall quadrature on the motor shaft (before the 1:120 gearbox),
  * pulled up to 3V3B on the board.
  *

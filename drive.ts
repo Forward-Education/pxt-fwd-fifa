@@ -44,7 +44,10 @@ enum FwdFifaTurn {
 
 namespace fwdMotors {
     const DEFAULT_DISTANCE_PER_ROTATION_CM = 21.36 // 68 mm wheel
-    const TRACK_WIDTH_CM = 13.85
+    // EFFECTIVE spacing, not the tape measure: wheel centres are 13.85-14.0 cm
+    // apart, but the wide tyres scrub on a pivot turn and the car turned ~2.5°
+    // extra per 90° (REV_E car, 2026-09-25) -> 13.85 x 90 / 92.5 = 13.5.
+    const DEFAULT_WHEEL_SPACING_CM = 13.5
     const MAX_DRIVE_SPEED = 40 // see SPEED CAP above
     const DEFAULT_DRIVE_SPEED = 40
 
@@ -53,9 +56,15 @@ namespace fwdMotors {
     const STALL_MS = 600 // no encoder movement for this long -> give up
     const LOOP_MS = 5
     const TRIM_GAIN = 8 // counts of error per 1 % of speed correction
+    // Slow down over the last RAMP_COUNTS so the robot arrives slowly instead
+    // of sliding past on the brake (REV_E car 2026-09-25: ~4° overshoot per
+    // 90° turn at a flat 40 %). 200 counts ≈ 2.5 cm or 21° of turn.
+    const RAMP_COUNTS = 200
+    const RAMP_MIN_SPEED = 20 // below this TT motors can stall under load
 
     let _distancePerRotationCm = DEFAULT_DISTANCE_PER_ROTATION_CM
     let _driveSpeed = DEFAULT_DRIVE_SPEED
+    let _wheelSpacingCm = DEFAULT_WHEEL_SPACING_CM
 
     function countsPerCm(): number {
         if (_distancePerRotationCm <= 0) return 0
@@ -76,6 +85,22 @@ namespace fwdMotors {
     //% weight=79
     export function setDistancePerRotation(distance: number): void {
         _distancePerRotationCm = Math.max(0, distance)
+    }
+
+    /**
+     * Set the distance between the two wheels, used to work out turns. The
+     * default (13.5 cm) is tuned for the car in the kit. If turns come out too far,
+     * make this smaller; too short, make it bigger. To tune it, turn 360° and
+     * scale by how far it really went: new = old x 360 / degrees turned.
+     * @param spacing wheel centre to wheel centre (cm)
+     */
+    //% group="Driving"
+    //% block="set wheel spacing to $spacing cm"
+    //% blockId=fwd_fifa_set_wheel_spacing
+    //% spacing.defl=13.5
+    //% weight=78
+    export function setWheelSpacing(spacing: number): void {
+        _wheelSpacingCm = Math.max(0, spacing)
     }
 
     /**
@@ -138,7 +163,7 @@ namespace fwdMotors {
     export function turnFor(direction: FwdFifaTurn, degrees: number): void {
         if (degrees <= 0) return
         // Each wheel travels along the pivot circle of diameter = track width.
-        const cmPerDegree = (Math.PI * TRACK_WIDTH_CM) / 360
+        const cmPerDegree = (Math.PI * _wheelSpacingCm) / 360
         const target = Math.round(degrees * cmPerDegree * countsPerCm())
         // right turn: left wheel forward, right wheel back
         runCounts(direction, -direction, target)
@@ -178,8 +203,9 @@ namespace fwdMotors {
         const start1 = fwdSensors.encoderCount(FwdFifaEncoder.M1)
         const start2 = fwdSensors.encoderCount(FwdFifaEncoder.M2)
 
-        setSpeed(FwdFifaMotor.M1, speed * dirLeft)
-        setSpeed(FwdFifaMotor.M2, speed * dirRight)
+        // motor 1 = right wheel, motor 2 = left wheel (see motors.ts)
+        setSpeed(FwdFifaMotor.M1, speed * dirRight)
+        setSpeed(FwdFifaMotor.M2, speed * dirLeft)
 
         // Generous safety net: 3x the expected time, plus a second of slack.
         const expectedMs = Math.idiv(
@@ -191,6 +217,7 @@ namespace fwdMotors {
         let best = 0
         let lastProgressAt = control.millis()
         let appliedTrim = 0
+        let appliedSpeed = speed
 
         while (true) {
             const d1 = Math.abs(fwdSensors.encoderCount(FwdFifaEncoder.M1) - start1)
@@ -207,17 +234,28 @@ namespace fwdMotors {
             }
             if (now > deadline) break
 
+            // Ease off towards the end, but never below the stall floor.
+            const remaining = target - progress
+            const cur =
+                remaining < RAMP_COUNTS
+                    ? Math.max(
+                          Math.min(speed, RAMP_MIN_SPEED),
+                          Math.idiv(speed * remaining, RAMP_COUNTS)
+                      )
+                    : speed
+
             // Keep the wheels in step: slow whichever one is ahead.
-            const maxTrim = Math.idiv(speed, 2)
+            const maxTrim = Math.idiv(cur, 2)
             const trim = Math.constrain(
                 Math.idiv(d1 - d2, TRIM_GAIN),
                 -maxTrim,
                 maxTrim
             )
-            if (trim !== appliedTrim) {
+            if (trim !== appliedTrim || cur !== appliedSpeed) {
                 appliedTrim = trim
-                setSpeed(FwdFifaMotor.M1, (speed - trim) * dirLeft)
-                setSpeed(FwdFifaMotor.M2, (speed + trim) * dirRight)
+                appliedSpeed = cur
+                setSpeed(FwdFifaMotor.M1, (cur - trim) * dirRight)
+                setSpeed(FwdFifaMotor.M2, (cur + trim) * dirLeft)
             }
             basic.pause(LOOP_MS)
         }

@@ -104,6 +104,16 @@ How far the robot travels for one full turn of its wheels. The default matches
 the wheels in the kit. To measure your own: mark a wheel, roll the robot
 forward exactly one wheel turn, and measure how far it moved.
 
+```sig
+fwdMotors.setWheelSpacing(13.5)
+```
+The distance between the two wheels, used to work out turns. The default
+(13.5 cm) is tuned for the kit car: a little less than the tape-measured
+13.85 cm, because the tyres scrub as the car pivots. If turns go too
+far, make it smaller; if they stop short, make it bigger. To tune it: turn
+360°, see how far the robot really turned, and set
+`new spacing = old spacing × 360 ÷ degrees turned`.
+
 > **Why 40 %?** The driving blocks are limited to 40 % speed (about 11 cm/s) so
 > that encoder counting stays reliable. The `set motor` and `drive left/right`
 > blocks below are not limited, but they don't measure distance.
@@ -118,10 +128,21 @@ fwdMotors.setSpeed(FwdFifaMotor.M1, 50)
 ```
 Run a motor at a speed from `-100` to `100` %. Positive is forward.
 
+On the car in the kit, **motor 1 is the right wheel** (port J5) and **motor 2
+is the left wheel** (port J6). The two motors are mounted facing opposite ways,
+so motor 2 starts out reversed: "forward" drives the car forward on both.
+
 ```sig
 fwdMotors.tank(50, 50)
 ```
-Run both motors at once (tank drive): left = motor 1, right = motor 2.
+Run both motors at once (tank drive): left = motor 2, right = motor 1.
+
+```sig
+fwdMotors.setReversed(FwdFifaMotor.M2, true)
+```
+Reverse which way a motor turns for "forward". Motor 2 starts reversed, which
+is right for the kit car. If you build something else and a motor runs
+backwards, change it here.
 
 ```sig
 fwdMotors.stop(FwdFifaMotor.M1, FwdFifaStopMode.Brake)

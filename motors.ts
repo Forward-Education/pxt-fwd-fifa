@@ -1,9 +1,15 @@
 /**
  * FIFA breakout — encoded DC motor driver (DRV8833 on micro:bit pins).
  *
- * Wiring (REV A):
- *   Motor 1: AIN1 = P13, AIN2 = P14
- *   Motor 2: BIN1 = P15, BIN2 = P16
+ * Wiring (all revisions):
+ *   Motor 1 (J5): AIN1 = P13, AIN2 = P14 — the car's RIGHT wheel
+ *   Motor 2 (J6): BIN1 = P15, BIN2 = P16 — the car's LEFT wheel
+ *
+ * Car convention (kit chassis, checked on REV_E 2026-09-25): J5 faces the
+ * car's right side and J6 its left, and the two motors are mounted mirror
+ * image, so with the straight 1:1 cables the left motor turns backwards for a
+ * positive drive. Motor 2 is therefore reversed by default; setReversed()
+ * changes that for other builds. "Forward" in every block means robot-forward.
  *
  * Drive scheme: slow decay ("drive/brake" PWM) — one input held high, the
  * other PWMed. Better low-speed torque and quieter than fast decay on TT
@@ -40,8 +46,15 @@ namespace fwdMotors {
             : { in1: AnalogPin.P15, in2: AnalogPin.P16 }
     }
 
-    // Track commanded direction so the encoder MVP can sign its counts.
+    // Track commanded direction so the encoder MVP can sign its counts. This
+    // is the LOGICAL direction (before reversal), so "forward counts up" holds
+    // on a reversed motor too. Stopping keeps the last direction: a braking or
+    // coasting wheel is still turning that way, and zeroing it made a reverse
+    // wheel's coast-down count upwards.
     export const _direction: { [key: number]: number } = { 1: 0, 2: 0 }
+
+    // Mirror-mounted motors: flip the pins, not the logical direction.
+    const _reversed: { [key: number]: boolean } = { 1: false, 2: true }
 
     function digitalHigh(pin: AnalogPin): void {
         pins.digitalWritePin(<number>pin, 1)
@@ -69,20 +82,36 @@ namespace fwdMotors {
     export function setSpeed(motor: FwdFifaMotor, speed: number): void {
         speed = Math.constrain(speed, -100, 100)
         const p = motorPins(motor)
-        fwdMotors._direction[motor] = speed === 0 ? 0 : speed > 0 ? 1 : -1
         if (speed === 0) {
             stop(motor, FwdFifaStopMode.Brake)
             return
         }
+        fwdMotors._direction[motor] = speed > 0 ? 1 : -1
         // slow decay: drive pin held high, other pin PWMed with inverted duty
         const duty = Math.idiv((100 - Math.abs(speed)) * 1023, 100)
-        if (speed > 0) {
+        if ((speed > 0) !== _reversed[motor]) {
             digitalHigh(p.in1)
             pwm(p.in2, duty)
         } else {
             digitalHigh(p.in2)
             pwm(p.in1, duty)
         }
+    }
+
+    /**
+     * Reverse which way a motor turns for "forward". Motor 2 (the left wheel)
+     * starts reversed, which is right for the car in the kit; change this if
+     * you build something else and a motor runs the wrong way.
+     * @param motor which motor port
+     * @param reversed true to reverse the motor
+     */
+    //% group="DC Motors"
+    //% block="set $motor reversed $reversed"
+    //% blockId=fwd_fifa_motor_set_reversed
+    //% reversed.shadow="toggleYesNo"
+    //% weight=90
+    export function setReversed(motor: FwdFifaMotor, reversed: boolean): void {
+        _reversed[motor] = reversed
     }
 
     /**
@@ -100,7 +129,6 @@ namespace fwdMotors {
         mode: FwdFifaStopMode = FwdFifaStopMode.Brake
     ): void {
         const p = motorPins(motor)
-        fwdMotors._direction[motor] = 0
         if (mode === FwdFifaStopMode.Brake) {
             digitalHigh(p.in1)
             digitalHigh(p.in2)
@@ -111,9 +139,9 @@ namespace fwdMotors {
     }
 
     /**
-     * Run both motors at once (tank drive).
-     * @param left speed for motor 1, -100 to 100 (%)
-     * @param right speed for motor 2, -100 to 100 (%)
+     * Run both motors at once (tank drive). Left is motor 2, right is motor 1.
+     * @param left speed for the left wheel (motor 2), -100 to 100 (%)
+     * @param right speed for the right wheel (motor 1), -100 to 100 (%)
      */
     //% group="DC Motors"
     //% block="drive left $left \\% right $right \\%"
@@ -122,8 +150,8 @@ namespace fwdMotors {
     //% right.min=-100 right.max=100 right.defl=50
     //% weight=97
     export function tank(left: number, right: number): void {
-        setSpeed(FwdFifaMotor.M1, left)
-        setSpeed(FwdFifaMotor.M2, right)
+        setSpeed(FwdFifaMotor.M2, left)
+        setSpeed(FwdFifaMotor.M1, right)
     }
 
     /**
