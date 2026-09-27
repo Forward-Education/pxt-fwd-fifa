@@ -28,10 +28,13 @@ The FIFA board works with **micro:bit V2 only**.
 | 3-pin header | a Dupont/JR servo (3.3–6 V rated — the header supplies 3.3 V) or a NeoPixel strip | Motors / Lights |
 | 1 × relay port | A device to switch on and off | Motors |
 | 4 × Jacdac ports | Any Jacdac module | that module's extension |
-| 3-pin header | A NeoPixel strip | Lights |
 | 5-pin header | Up to 3 extra on/off signals | Sensors → more |
 | 4-pin header | I2C devices — use the micro:bit's own I2C blocks | — |
 | Battery | 1S LiPo, charges over USB | Sensors |
+
+> The Jacdac ports are powered from the board's battery. Plug in Jacdac modules,
+> but don't connect a second power source to them, such as another breakout board
+> or a Jacdac battery pack.
 
 ## Add the extension
 
