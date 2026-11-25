@@ -308,6 +308,32 @@ fwdSensors.batteryLevel()
 ```
 The battery charge level as a percentage (3.3 V = 0 %, 4.2 V = 100 %).
 
+### Status light
+
+The small light on the board shows power, battery and charging, and whether the
+micro:bit is talking to the board. It isn't controlled by blocks.
+
+| What you see | What it means |
+|---|---|
+| Off, with a faint green blink about twice a second | All good: the board is on and the micro:bit program is connected |
+| Slow red breathing | Waiting for the micro:bit. Check it is seated and running a program made with this extension |
+| Slow green breathing | Charging (USB plugged in), with the switch on or off |
+| Steady green | Fully charged (USB plugged in) |
+| Slow yellow blink | Battery low: charge it soon |
+| Fast red blink | Battery very low: charge it now. Motors and servos may not work properly |
+| Steady red | Motor problem: the motor driver has shut itself off, usually because a motor is jammed, a motor cable is damaged, or the driver is too hot. Stop the motors, check the cables, and let the board cool |
+| Seven quick blue blinks | The board is identifying itself (for example, from the Jacdac dashboard) |
+| Fast green blinking that doesn't stop | The board needs attention: contact Forward Education |
+| Completely off | Switched off and not plugged in, or the battery is flat |
+
+If more than one applies, the light shows the most important: a motor problem
+first, then battery and charging, then the connection to the micro:bit. For
+example, while charging it shows green even if no program is running.
+
+Also normal: one slow green blink when the board powers up, and one short blue
+glow about a second after switching off while a micro:bit was running (the board
+resets itself).
+
 ### Lights
 
 NeoPixel blocks drive a strip plugged into the 3-pin header.
