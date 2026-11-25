@@ -90,7 +90,7 @@ is plugged in.
 | Colour sensor | Sensors | `color1 red %` |
 | Soil moisture | Sensors | `moisture1 moisture level (%)` |
 | Rotary dial | Buttons | `on dial1 rotated ↻` |
-| D-pad | Sensors | `on dpad1 up pressed` |
+| D-pad | Buttons | `on dpad1 up pressed` |
 | LCD screen | Sensors | `print string "Hello" on line 1 of lcd1` |
 
 ```sig
