@@ -2,7 +2,7 @@
 // block into a program and copy the JavaScript).
 //
 // Covered signatures:
-//   fwdMotors.setSpeed / setReversed / stop / tank / stopAll / setRelay
+//   fwdMotors.setMotorSpeed / setReversed / stopMotor / tank / stopAll / setRelay
 //   fwdMotors.servoPort1.setType / setAngle / runAt / release
 //   fwdMotors.setHeaderServoType / setHeaderServoAngle / runHeaderServo / releaseHeaderServo
 //   fwdMotors.driveFor / turnFor / startDriving / stopDriving
@@ -13,6 +13,8 @@
 //   fwdSensors.expanderRegWrite / expanderRegRead
 //   fwdLights.initStrip / setAllPixels / setPixel / setBrightness / clearPixels
 //   fwdLights.rotatePixels / rgb
+//   Kit modules bundled as dependencies (one block each, to prove they load):
+//   fwdSensors.line1 / sonar1 / color1 / moisture1 / lcd1 / dpad1, fwdButtons.dial1
 
 fwdSensors.setCountsPerRevolution(1680)
 
@@ -23,11 +25,11 @@ fwdLights.setPixel(0, fwdLights.rgb(255, 0, 0))
 fwdLights.rotatePixels(1)
 fwdLights.clearPixels()
 
-fwdMotors.setSpeed(FwdFifaMotor.M1, 50)
-fwdMotors.setSpeed(FwdFifaMotor.M2, -50)
+fwdMotors.setMotorSpeed(FwdFifaMotor.M1, 50)
+fwdMotors.setMotorSpeed(FwdFifaMotor.M2, -50)
 fwdMotors.tank(30, 30)
 fwdMotors.setReversed(FwdFifaMotor.M2, true)
-fwdMotors.stop(FwdFifaMotor.M1, FwdFifaStopMode.Coast)
+fwdMotors.stopMotor(FwdFifaMotor.M1, FwdFifaStopMode.Coast)
 fwdMotors.stopAll()
 
 fwdMotors.setDistancePerRotation(21.36)
@@ -79,4 +81,20 @@ input.onButtonPressed(Button.A, () => {
     fwdSensors.resetEncoder(FwdFifaEncoder.M1)
     fwdSensors.resetEncoder(FwdFifaEncoder.M2)
     basic.showNumber(fwdSensors.batteryLevel())
+})
+
+// FIFA kit modules, bundled from pxt-fwd-modules v1.2.1 and pxt-dpad v0.1.1
+fwdSensors.lcd1.printLineString("FIFA kit", 1)
+fwdSensors.dpad1.fwdOnPressed(FwdDpadDirection.Up, () => {
+    fwdMotors.driveFor(FwdFifaDirection.Forward, 10, FwdFifaMoveUnit.Cm)
+})
+fwdButtons.dial1.onRotated(fwdEnums.ClockwiseCounterclockwise.Clockwise, () => {
+    fwdSensors.lcd1.printLineNumber(fwdButtons.dial1.position(), 2)
+})
+basic.forever(() => {
+    serial.writeValue("line", fwdSensors.line1.isLineSensorState(fwdEnums.OnOff.On) ? 1 : 0)
+    serial.writeValue("sonar", fwdSensors.sonar1.distance())
+    serial.writeValue("red", fwdSensors.color1.color(fwdSensors.RedGreenBlue.Red))
+    serial.writeValue("soil", fwdSensors.moisture1.moistureLevel())
+    basic.pause(500)
 })

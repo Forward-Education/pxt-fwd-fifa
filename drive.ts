@@ -204,8 +204,8 @@ namespace fwdMotors {
         const start2 = fwdSensors.encoderCount(FwdFifaEncoder.M2)
 
         // motor 1 = right wheel, motor 2 = left wheel (see motors.ts)
-        setSpeed(FwdFifaMotor.M1, speed * dirRight)
-        setSpeed(FwdFifaMotor.M2, speed * dirLeft)
+        setMotorSpeed(FwdFifaMotor.M1, speed * dirRight)
+        setMotorSpeed(FwdFifaMotor.M2, speed * dirLeft)
 
         // Generous safety net: 3x the expected time, plus a second of slack.
         const expectedMs = Math.idiv(
@@ -254,8 +254,8 @@ namespace fwdMotors {
             if (trim !== appliedTrim || cur !== appliedSpeed) {
                 appliedTrim = trim
                 appliedSpeed = cur
-                setSpeed(FwdFifaMotor.M1, (cur - trim) * dirRight)
-                setSpeed(FwdFifaMotor.M2, (cur + trim) * dirLeft)
+                setMotorSpeed(FwdFifaMotor.M1, (cur - trim) * dirRight)
+                setMotorSpeed(FwdFifaMotor.M2, (cur + trim) * dirLeft)
             }
             basic.pause(LOOP_MS)
         }

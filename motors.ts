@@ -79,11 +79,11 @@ namespace fwdMotors {
     //% blockId=fwd_fifa_motor_set_speed
     //% speed.min=-100 speed.max=100 speed.defl=50
     //% weight=99
-    export function setSpeed(motor: FwdFifaMotor, speed: number): void {
+    export function setMotorSpeed(motor: FwdFifaMotor, speed: number): void {
         speed = Math.constrain(speed, -100, 100)
         const p = motorPins(motor)
         if (speed === 0) {
-            stop(motor, FwdFifaStopMode.Brake)
+            stopMotor(motor, FwdFifaStopMode.Brake)
             return
         }
         fwdMotors._direction[motor] = speed > 0 ? 1 : -1
@@ -124,7 +124,7 @@ namespace fwdMotors {
     //% blockId=fwd_fifa_motor_stop
     //% expandableArgumentMode="toggle"
     //% weight=98
-    export function stop(
+    export function stopMotor(
         motor: FwdFifaMotor,
         mode: FwdFifaStopMode = FwdFifaStopMode.Brake
     ): void {
@@ -150,8 +150,8 @@ namespace fwdMotors {
     //% right.min=-100 right.max=100 right.defl=50
     //% weight=97
     export function tank(left: number, right: number): void {
-        setSpeed(FwdFifaMotor.M2, left)
-        setSpeed(FwdFifaMotor.M1, right)
+        setMotorSpeed(FwdFifaMotor.M2, left)
+        setMotorSpeed(FwdFifaMotor.M1, right)
     }
 
     /**
@@ -162,7 +162,7 @@ namespace fwdMotors {
     //% blockId=fwd_fifa_motor_stop_all
     //% weight=96
     export function stopAll(): void {
-        stop(FwdFifaMotor.M1, FwdFifaStopMode.Brake)
-        stop(FwdFifaMotor.M2, FwdFifaStopMode.Brake)
+        stopMotor(FwdFifaMotor.M1, FwdFifaStopMode.Brake)
+        stopMotor(FwdFifaMotor.M2, FwdFifaStopMode.Brake)
     }
 }

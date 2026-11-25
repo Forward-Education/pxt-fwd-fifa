@@ -27,7 +27,7 @@ The FIFA board works with **micro:bit V2 only**.
 | 3 × servo ports | 180°, 270° or continuous-rotation servos (4.8–6 V) | Motors |
 | 3-pin header | a Dupont/JR servo (3.3–6 V rated — the header supplies 3.3 V) or a NeoPixel strip | Motors / Lights |
 | 1 × relay port | A device to switch on and off | Motors |
-| 4 × Jacdac ports | Any Jacdac module | that module's extension |
+| 4 × Jacdac ports | The kit's Jacdac modules (below), or any Jacdac module | Sensors, Buttons |
 | 5-pin header | Up to 3 extra on/off signals | Sensors → more |
 | 4-pin header | I2C devices — use the micro:bit's own I2C blocks | — |
 | Battery | 1S LiPo, charges over USB | Sensors |
@@ -42,7 +42,14 @@ The FIFA board works with **micro:bit V2 only**.
 2. Click **Extensions** under the gearwheel menu
 3. Search for `https://github.com/Forward-Education/pxt-fwd-fifa` and import
 
-The **Motors**, **Lights** and **Sensors** categories appear in the toolbox.
+The **Motors**, **Lights**, **Sensors** and **Buttons** categories appear in the
+toolbox, with blocks for every device in the kit. This is the only extension a kit
+project needs.
+
+**Getting a newer version:** MakeCode adds the newest version when you add the
+extension to a project, and the project keeps that version. MakeCode won't swap
+it for a newer one while the project uses its blocks, so to move to a newer
+version, start a new project and add the extension again.
 
 ## Example
 
@@ -68,6 +75,58 @@ basic.forever(function () {
 ```
 
 ## Blocks
+
+### Kit modules
+
+These Jacdac modules come with the kit and their blocks are included in this
+extension. Plug a module into any Jacdac port with a Jacdac cable. Each block
+has a dropdown (`sonar1`, `dial1`, …) for when more than one of the same module
+is plugged in.
+
+| Module | Category | Example block |
+|---|---|---|
+| Line sensor | Sensors | `line1 is on` |
+| Sonar (distance) | Sensors | `sonar1 distance (m)` |
+| Colour sensor | Sensors | `color1 red %` |
+| Soil moisture | Sensors | `moisture1 moisture level (%)` |
+| Rotary dial | Buttons | `on dial1 rotated ↻` |
+| D-pad | Sensors | `on dpad1 up pressed` |
+| LCD screen | Sensors | `print string "Hello" on line 1 of lcd1` |
+
+```sig
+fwdSensors.sonar1.distance()
+```
+The distance the sonar measures, in metres.
+
+```sig
+fwdSensors.line1.isLineSensorState(fwdEnums.OnOff.On)
+```
+Whether the line sensor sees a line.
+
+```sig
+fwdSensors.color1.color(fwdSensors.RedGreenBlue.Red)
+```
+How much red, green or blue the colour sensor sees, as a percentage.
+
+```sig
+fwdSensors.moisture1.moistureLevel()
+```
+The soil moisture, as a percentage.
+
+```sig
+fwdButtons.dial1.position()
+```
+How far the dial has been turned.
+
+```sig
+fwdSensors.dpad1.fwdOnPressed(FwdDpadDirection.Up, function () {})
+```
+Runs when a D-pad direction is pressed.
+
+```sig
+fwdSensors.lcd1.printLineString("Hello", 1)
+```
+Shows text on a line of the LCD screen.
 
 ### Driving
 
@@ -127,7 +186,7 @@ far, make it smaller; if they stop short, make it bigger. To tune it: turn
 ### Motors
 
 ```sig
-fwdMotors.setSpeed(FwdFifaMotor.M1, 50)
+fwdMotors.setMotorSpeed(FwdFifaMotor.M1, 50)
 ```
 Run a motor at a speed from `-100` to `100` %. Positive is forward.
 
@@ -148,7 +207,7 @@ is right for the kit car. If you build something else and a motor runs
 backwards, change it here.
 
 ```sig
-fwdMotors.stop(FwdFifaMotor.M1, FwdFifaStopMode.Brake)
+fwdMotors.stopMotor(FwdFifaMotor.M1, FwdFifaStopMode.Brake)
 ```
 Stop a motor, braking (short the windings) or coasting (freewheel).
 

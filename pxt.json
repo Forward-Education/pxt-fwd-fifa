@@ -1,15 +1,22 @@
 {
     "name": "fwd-fifa",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "Forward Education FIFA breakout board for micro:bit V2 - encoded DC motors, GPIO expander, NeoPixels, and Jacdac",
     "license": "MIT",
     "dependencies": {
         "core": "*",
         "ws2812b": "github:microsoft/pxt-ws2812b#v0.1.1",
-        "jacdac": "github:jacdac/pxt-jacdac#v1.9.42",
-        "jacdac-servo": "github:jacdac/pxt-jacdac/servo#v1.9.42",
-        "jacdac-relay": "github:jacdac/pxt-jacdac/relay#v1.9.42",
-        "jacdac-dc-voltage-measurement": "github:jacdac/pxt-jacdac/dc-voltage-measurement#v1.9.42"
+        "jacdac": "github:jacdac/pxt-jacdac#v1.9.41",
+        "jacdac-servo": "github:jacdac/pxt-jacdac/servo#v1.9.41",
+        "jacdac-relay": "github:jacdac/pxt-jacdac/relay#v1.9.41",
+        "jacdac-dc-voltage": "github:jacdac/pxt-jacdac/dc-voltage-measurement#v1.9.41",
+        "fwd-line": "github:Forward-Education/pxt-fwd-modules/fwd-line#v1.2.1",
+        "fwd-sonar": "github:Forward-Education/pxt-fwd-modules/fwd-sonar#v1.2.1",
+        "fwd-color": "github:Forward-Education/pxt-fwd-modules/fwd-color#v1.2.1",
+        "fwd-moisture": "github:Forward-Education/pxt-fwd-modules/fwd-moisture#v1.2.1",
+        "fwd-dial": "github:Forward-Education/pxt-fwd-modules/fwd-dial#v1.2.1",
+        "fwd-lcd": "github:Forward-Education/pxt-fwd-modules/fwd-lcd#v1.2.1",
+        "pxt-dpad": "github:Forward-Education/pxt-dpad#v0.1.1"
     },
     "files": [
         "README.md",
