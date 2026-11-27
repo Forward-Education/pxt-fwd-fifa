@@ -1,6 +1,6 @@
 {
     "name": "fwd-fifa",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Forward Education FIFA breakout board for micro:bit V2 - encoded DC motors, GPIO expander, NeoPixels, and Jacdac",
     "license": "MIT",
     "dependencies": {
@@ -16,7 +16,7 @@
         "fwd-moisture": "github:Forward-Education/pxt-fwd-modules/fwd-moisture#v1.2.1",
         "fwd-dial": "github:Forward-Education/pxt-fwd-modules/fwd-dial#v1.2.1",
         "fwd-lcd": "github:Forward-Education/pxt-fwd-modules/fwd-lcd#v1.2.1",
-        "pxt-dpad": "github:Forward-Education/pxt-dpad#v0.1.2"
+        "pxt-dpad": "github:Forward-Education/pxt-dpad#v0.1.3"
     },
     "files": [
         "README.md",
@@ -28,11 +28,21 @@
         "expander.ts",
         "lights.ts",
         "brain.ts",
-        "servos.ts"
+        "servos.ts",
+        "_locales/fr/fwd-fifa-jsdoc-strings.json",
+        "_locales/fr/fwd-fifa-strings.json",
+        "_locales/ar/fwd-fifa-jsdoc-strings.json",
+        "_locales/ar/fwd-fifa-strings.json"
     ],
     "testFiles": [
         "test.ts"
     ],
+    "toolboxFilter": {
+        "namespaces": {
+            "modules": "hidden"
+        },
+        "blocks": {}
+    },
     "supportedTargets": [
         "microbit"
     ],
